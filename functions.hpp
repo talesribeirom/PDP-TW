@@ -6,12 +6,13 @@
 #include "classes.hpp" 
 
 Data* data = new Data();
+Util* util = new Util();
 
 void Data::readDataLines(ifstream& dataFile)
 {
-    string jumpPropertyName;
-
     try{
+        string jumpPropertyName;
+
         for (int line = 1; line < 11; line++)
             {
                 //Skips the properties names
@@ -60,12 +61,12 @@ void Data::readDataLines(ifstream& dataFile)
                     break;
                 }
             }
+        getline(dataFile, jumpPropertyName);
     }
     catch (exception &e){
-        cout << "Error: " << e.what();
+        cout << "Error on read Property Lines (First 10): " << e.what();
     }
     
-    getline(dataFile, jumpPropertyName);
 }
 
 void Data::printData(){
@@ -87,41 +88,93 @@ int Data::getSize(Data *data){
 
 void Node::readNodes(ifstream &dataFile)
 {
-    string jumpPropertyName;
-    for (int i = 1; i < 10; i++)
-    {
-        switch (i)
+    try{
+        string jumpNodeName;
+        int currentLine;
+
+        for (int lines = 1; lines < 10; lines++)
         {
-        case 1:
-            dataFile >> Id;
-            break;
-        case 2:
-            dataFile >> Latitude;
-            break;
-        case 3:
-            dataFile >> Longitude;
-            break;
-        case 4:
-            dataFile >> Demand;
-            break;
-        case 5:
-            dataFile >> EarlyTimeWindow;
-            break;
-        case 6:
-            dataFile >> LastTimeWindow;
-            break;
-        case 7:
-            dataFile >> Duration;
-            break;
-        case 8:
-            dataFile >> CollectPair;
-            break;
-        case 9:
-            dataFile >> DeliveryPair;
-            break;
+            switch (lines)
+            {
+            case 1:
+                dataFile >> Id;
+                if(Id < 0){
+                    currentLine = util->getCurrentLine(dataFile);
+                    cout << endl << "##### Node Error: Invalid Id at line" << " " << currentLine << " #####"<< endl;
+                    exit(0);
+                }
+                break;
+            case 2:
+                dataFile >> Latitude;
+                if(Latitude < -90.0 || Latitude > 90.0){
+                    currentLine = util->getCurrentLine(dataFile);
+                    cout << endl << "##### Node Error: Invalid Latitude at line" << " " << currentLine << " #####"<< endl;
+                    exit(0);
+                }
+                break;
+            case 3:
+                dataFile >> Longitude;
+                if( Longitude < -180.0 || Longitude > 180.0){
+                    currentLine = util->getCurrentLine(dataFile);
+                    cout << endl << "##### Node Error: Invalid Latitude at line" << " " << currentLine << " #####"<< endl;
+                    exit(0);
+                }
+                break;
+            case 4:
+                dataFile >> Demand;
+                if(Demand == -1){
+                    currentLine = util->getCurrentLine(dataFile);
+                    cout << endl << "##### Node Error: Invalid Demand at line" << " " << currentLine << " #####"<< endl;
+                    exit(0);
+                }
+                break;
+            case 5:
+                dataFile >> EarlyTimeWindow;
+                if(EarlyTimeWindow < 0){
+                    currentLine = util->getCurrentLine(dataFile);
+                    cout << endl << "##### Node Error: Invalid EarlyTimeWindow at line" << " " << currentLine << " #####"<< endl;
+                    exit(0);
+                }
+                break;
+            case 6:
+                dataFile >> LastTimeWindow;
+                if(LastTimeWindow < 0){
+                    currentLine = util->getCurrentLine(dataFile);
+                    cout << endl << "##### Node Error: Invalid LastTimeWindow at line" << " " << currentLine << " #####"<< endl;
+                    exit(0);
+                }
+                break;
+            case 7:
+                dataFile >> Duration;
+                if(Duration < 0){
+                    currentLine = util->getCurrentLine(dataFile);
+                    cout << endl << "##### Node Error: Invalid Duration at line" << " " << currentLine << " #####"<< endl;
+                    exit(0);
+                }
+                break;
+            case 8:
+                dataFile >> CollectPair;
+                if(CollectPair < 0){
+                    currentLine = util->getCurrentLine(dataFile);
+                    cout << endl << "##### Node Error: Invalid CollectPair at line" << " " << currentLine << " #####"<< endl;
+                    exit(0);
+                }
+                break;
+            case 9:
+                dataFile >> DeliveryPair;
+                if(DeliveryPair < 0){
+                    currentLine = util->getCurrentLine(dataFile);
+                    cout << endl << "##### Node Error: Invalid DeliveryPair at line" << " " << currentLine << " #####"<< endl;
+                    exit(0);
+                }
+                break;
+            }
         }
+        getline(dataFile, jumpNodeName);
     }
-    getline(dataFile, jumpPropertyName);
+    catch(exception &e){
+        cout << "Error on reading Nodes Lines: " << e.what();
+    }
 }
 
 void Node::printNodes(){
@@ -136,6 +189,23 @@ void Node::printNodes(){
          << DeliveryPair << " "
          << endl;
 }
+
+int Util::getCurrentLine(std::istream& is)
+{
+    int lineCount = 1;
+    is.clear();     // need to clear error bits otherwise tellg returns -1.
+    auto originalPos = is.tellg();
+    if (originalPos < 0) 
+        return -1;
+    is.seekg(0);
+    char c;
+    while ((is.tellg() < originalPos) && is.get(c))
+    {
+        if (c == '\n') ++lineCount;
+    }
+    return lineCount;
+}
+
 
 /*
 class Edge

@@ -6,10 +6,10 @@ int main()
     Data* data = new Data();
 
     string fileName;
-    cout << "Enter the file name without (.txt): ";
+    cout << "Enter the file name without the extension (.txt): ";
     cin >> fileName;
 
-    ifstream dataFile(fileName + ".txt");
+    ifstream dataFile("instances/" + fileName + ".txt");
 
     if (dataFile)
     {
@@ -19,12 +19,14 @@ int main()
         cout << "===== Properties found in the file =====" << endl;
         data->printData();
 
+
+
         Node* node = new Node[numberVertex];
         for (int i = 0; i < numberVertex; i++)
         {
             node[i].readNodes(dataFile);
         }
-
+    
         cout << "===== Nodes found in the file =====" << endl;
         for (int i = 0; i < numberVertex; i++)
         {
@@ -40,5 +42,6 @@ int main()
     }
     
 
+   
 
 }

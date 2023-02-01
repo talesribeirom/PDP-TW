@@ -6,8 +6,16 @@
 
 using namespace std;
 
+class Util
+{
+    public:
+        int getCurrentLine(istream& is);
+
+};
+
 class Data
 {
+    friend class Util;
     private:
         string Name;
         string Location;
@@ -31,7 +39,6 @@ class Data
         void readDataLines(ifstream& dataFile);
         void printData();
         int getSize(Data *data);
-
 };
 
 Data::Data(){
@@ -53,21 +60,22 @@ Data::Data(){
 
 class Node
 {
-private:
-    int Id;
-    float Latitude;
-    float Longitude;
-    int Demand;
-    int EarlyTimeWindow;
-    int LastTimeWindow;
-    int Duration;
-    int CollectPair;
-    int DeliveryPair;
+    friend class Util;
+    private:
+        int Id;
+        float Latitude;
+        float Longitude;
+        int Demand;
+        int EarlyTimeWindow;
+        int LastTimeWindow;
+        int Duration;
+        int CollectPair;
+        int DeliveryPair;
 
-public:
-    Node();
-    void readNodes(ifstream &dataFile);
-    void printNodes();
+    public:
+        Node();
+        void readNodes(ifstream &dataFile);
+        void printNodes();
 };
 
 Node::Node()
