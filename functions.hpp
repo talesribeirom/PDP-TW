@@ -3,53 +3,7 @@
 #include <string>
 #include <fstream>
 #include <vector>
-
-using namespace std;
-
-class Data
-{
-    private:
-        string Name;
-        string Location;
-        string Comment;
-        string Type;
-        int Size;
-        string Distribution;
-        string Depot;
-        int RouteTime;
-        int TimeWindow;
-        int Capacity;
-
-        // Aux for getline() function - convert to int
-        string SizeString;
-        string RouteTimeString;
-        string TimeWindowString;
-        string CapacityString;
-        
-    public:
-        Data();
-        void readDataLines(ifstream& dataFile);
-        void printData();
-        int getSize(Data *data);
-
-};
-
-Data::Data(){
-    Name = ' ';
-    Location = ' ';
-    Comment = ' ';
-    Type = ' ';
-    Size = -1;
-    Distribution = ' ';
-    Depot = ' ';
-    RouteTime = -1;
-    TimeWindow = -1;
-    Capacity = -1;
-    SizeString = ' ';
-    RouteTimeString = ' ';
-    TimeWindowString = ' ';
-    CapacityString = ' ';
-}
+#include "classes.hpp" 
 
 Data* data = new Data();
 
@@ -115,7 +69,6 @@ void Data::readDataLines(ifstream& dataFile)
 }
 
 void Data::printData(){
-    
     cout << Name << endl
          << Location << endl
          << Comment << endl
@@ -132,70 +85,38 @@ int Data::getSize(Data *data){
     return data->Size;
 }
 
-class Node
-{
-private:
-    int Id;
-    float Latitude;
-    float Longitude;
-    int Demand;
-    int EarlyTimeWindow;
-    int LastTimeWindow;
-    int Duration;
-    int CollectPair;
-    int DeliveryPair;
-
-public:
-    Node();
-    void readNodes(ifstream &dataFile);
-    void printNodes();
-};
-
-Node::Node()
-{
-    Id = -1;
-    Latitude = -1;
-    Longitude = -1;
-    Demand = -1;
-    EarlyTimeWindow = -1;
-    LastTimeWindow = -1;
-    Duration = -1;
-    CollectPair = -1;
-    DeliveryPair = -1;
-}
-
 void Node::readNodes(ifstream &dataFile)
 {
     string jumpPropertyName;
-    for (int i = 0; i < 9; i++)
+    for (int i = 1; i < 10; i++)
     {
         switch (i)
         {
-        case 0:
+        case 1:
             dataFile >> Id;
             break;
-        case 1:
+        case 2:
             dataFile >> Latitude;
             break;
-        case 2:
+        case 3:
             dataFile >> Longitude;
             break;
-        case 3:
+        case 4:
             dataFile >> Demand;
             break;
-        case 4:
+        case 5:
             dataFile >> EarlyTimeWindow;
             break;
-        case 5:
+        case 6:
             dataFile >> LastTimeWindow;
             break;
-        case 6:
+        case 7:
             dataFile >> Duration;
             break;
-        case 7:
+        case 8:
             dataFile >> CollectPair;
             break;
-        case 8:
+        case 9:
             dataFile >> DeliveryPair;
             break;
         }
@@ -204,7 +125,6 @@ void Node::readNodes(ifstream &dataFile)
 }
 
 void Node::printNodes(){
-    
     cout << Id << " "
          << Latitude << " "
          << Longitude << " "
@@ -235,5 +155,3 @@ Edge::Edge()
 void Edge::readEdges(ifstream dataFile){
 }
 */
-
-

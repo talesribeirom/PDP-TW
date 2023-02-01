@@ -1,4 +1,4 @@
-#include "class.h"
+#include "functions.hpp"
 #include <vector>
 
 int main()
@@ -9,12 +9,14 @@ int main()
     cout << "Enter the file name without (.txt): ";
     cin >> fileName;
 
-    ifstream dataFile("instances/" + fileName + ".txt");
+    ifstream dataFile(fileName + ".txt");
 
     if (dataFile)
     {
         data->readDataLines(dataFile);
         int numberVertex = data->getSize(data);
+        
+        cout << "===== Properties found in the file =====" << endl;
         data->printData();
 
         Node* node = new Node[numberVertex];
@@ -23,6 +25,7 @@ int main()
             node[i].readNodes(dataFile);
         }
 
+        cout << "===== Nodes found in the file =====" << endl;
         for (int i = 0; i < numberVertex; i++)
         {
             node[i].printNodes();
@@ -33,7 +36,7 @@ int main()
     }
     else
     {
-        cout << "Error: Invalid File Name!";
+        cout << "Error: Invalid File Name or File Format!";
     }
     
 
