@@ -22,9 +22,9 @@ int main()
         node->validateData();
         node->nodeDistance(dataFile); 
         
-        //segmentation fault
+        //getting segmentation when creating, read and assignment functions validated
+        //implement directly? change struct
         auto validators = make_unique<Validator>(node);
-
         auto vehicles = make_unique<Vehicles>(validators.get(), vehicleNumbers);
 
         vector<pair<int, int>> requests;
