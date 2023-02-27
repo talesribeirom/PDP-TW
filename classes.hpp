@@ -6,90 +6,104 @@
 
 using namespace std;
 
+#define INVALID -1
+
 class Util
 {
     public:
         int getCurrentLine(istream& is);
-
 };
 
 class Data
 {
     friend class Util;
-    private:
+    friend class Node;
+    friend class Validator;
+    public:
         string Name;
         string Location;
         string Comment;
         string Type;
-        int Size;
         string Distribution;
         string Depot;
         int RouteTime;
         int TimeWindow;
         int Capacity;
-
-        // Aux for getline() function - convert to int
+        int Size;
         string SizeString;
         string RouteTimeString;
         string TimeWindowString;
         string CapacityString;
-        
-    public:
+
         Data();
-        void readDataLines(ifstream& dataFile);
+        int readDataLines(ifstream& dataFile);
         void printData();
         int getSize(Data *data);
 };
 
-Data::Data(){
-    Name = ' ';
-    Location = ' ';
-    Comment = ' ';
-    Type = ' ';
+Data::Data()
+{
     Size = -1;
-    Distribution = ' ';
-    Depot = ' ';
     RouteTime = -1;
     TimeWindow = -1;
     Capacity = -1;
-    SizeString = ' ';
-    RouteTimeString = ' ';
-    TimeWindowString = ' ';
-    CapacityString = ' ';
 }
 
-class Node
+class Node : public Data
 {
     friend class Util;
-    private:
-        int Id;
-        float Latitude;
-        float Longitude;
-        int Demand;
-        int EarlyTimeWindow;
-        int LastTimeWindow;
-        int Duration;
-        int CollectPair;
-        int DeliveryPair;
-
     public:
-        Node();
+        int *Id;
+        double *Latitude;
+        double *Longitude;
+        int *Demand;
+        int *EarlyTimeWindow;
+        int *LastTimeWindow;
+        int *Duration;
+        int *CollectPair;
+        int *DeliveryPair;
+        bool *Visited;
+    
+        int **Distance;
+        Node(Data *data);
+        ~Node();
         void readNodes(ifstream &dataFile);
+        void validateData();
+        void nodeDistance(ifstream &dataFile);
         void printNodes();
 };
 
-Node::Node()
+class Validator : public Node
 {
-    Id = -1;
-    Latitude = -1;
-    Longitude = -1;
-    Demand = -1;
-    EarlyTimeWindow = -1;
-    LastTimeWindow = -1;
-    Duration = -1;
-    CollectPair = -1;
-    DeliveryPair = -1;
-}
+    public:
+        bool validateRoute(const vector<int>& newRoute);
+        int calculateRoute(vector<int> newRoute);
+        bool someRoute(const std::vector<int>& route, int& priority) const;
+        int calculateDistance(int fromVertex, int toVertex) const;
+        int updateTotalTime(int vertex, int totalTime, int& priority) const;
+        Validator(Node *node) : Node(*node) {};
+        void setVisited(vector<pair<int,int>> &request, pair<int,int> package);
+        pair<int,int> returnPackage(vector<int> newRoute);
+        vector<int> opt(const vector<int>& newRoute);
+};
 
+class Vehicles : public Validator
+{   
+    private:
+        vector<int> *route;
+
+    public:
+        Vehicles(Validator *validator, int vehicleNumbers);
+        ~Vehicles();
+        bool emptyRoute(int vehicleId);
+        void showRoute(int vehicleId);
+        int calculateTime(int vehicleId);
+        void updateRoute(vector<int> newRoute, int vehicleId);
+        vector<int> getRoute(int vehicleId);
+        void setRequest(vector<pair<int,int>> &request, int vehicleId);
+        vector<int> insertRoute(const vector<int>& otherRoute, int vehicleId);
+        void resizeRoute(int &routeNumbers);
+        void generateFile(int vehicleNumbers);
+};
 
 
